@@ -1,0 +1,60 @@
+
+/* === ESTILO NUEVO PARA QUEDE COMO LA FOTO === */
+header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 40px 80px !important;
+    border: none !important;
+}
+.logo { height: 100px !important; }
+
+.carrito { position: relative !important; }
+.carrito img { height: 35px !important; }
+.burbuja {
+    position: absolute !important;
+    top: -5px !important; right: -8px !important;
+    background: red !important; color: white !important;
+    border-radius: 50% !important; width: 18px !important; height: 18px !important;
+    font-size: 12px !important; text-align: center !important; line-height: 18px !important;
+}
+
+.titulo-vitrina {
+    text-align: center;
+    font-size: 28px;
+    margin: 40px 0 20px 0;
+    font-family: 'Times New Roman', serif;
+}
+
+#listado-productos {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 60px !important;
+    padding: 60px 80px !important;
+    max-width: 1400px !important;
+    margin: auto !important;
+    background: white !important;
+}
+
+.card {
+    text-align: center !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+.card img {
+    width: 100% !important;
+    height: 350px !important;
+    object-fit: contain !important;
+    margin-bottom: 20px !important;
+}
+.card h3 {
+    font-size: 18px !important;
+    font-weight: normal !important;
+    font-family: 'Times New Roman', serif !important;
+    margin-bottom: 8px !important;
+}
+.precio {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    font-family: 'Times New Roman', serif !important;
+}
