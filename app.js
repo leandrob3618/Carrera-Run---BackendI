@@ -9,6 +9,7 @@ import mongoose from 'mongoose'
 
 // Importar rutas y modelos
 import productsRouter from './server/routes/products.router.js'
+import cartsRouter from './server/routes/carts.router.js' // <- TE FALTA ESTA LINEA
 import Product from './server/models/product.model.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 
 // Rutas API
 app.use('/api/products', productsRouter)
+app.use('/api/carts', cartsRouter) // <- TE FALTA ESTA LINEA TAMBIEN
 
 // Rutas de Vistas
 app.get('/realtimeproducts', async (req, res) => {
@@ -49,11 +51,7 @@ mongoose.connect('mongodb://localhost:27017/ecommerce')
     .then(() => console.log('Conectado a MongoDB'))
     .catch(err => console.error(err))
 
-// WebSockets
-io.on('connection', async (socket) => {
-    console.log('Cliente conectado')
-
-    // WebSockets
+// WebSockets - SOLO UNA VEZ
 io.on('connection', async (socket) => {
     console.log('Cliente conectado')
     
@@ -80,17 +78,6 @@ io.on('connection', async (socket) => {
             await Product.findByIdAndDelete(id)
             const products = await Product.find()
             io.emit('products', products) // actualiza a todos
-        } catch (error) {
-            console.log(error)
-        }
-    })
-})
-    
-    socket.on('newProduct', async (data) => {
-        try {
-            const product = await Product.create(data)
-            const products = await Product.find()
-            io.emit('products', products) // le manda a todos la lista nueva
         } catch (error) {
             console.log(error)
         }

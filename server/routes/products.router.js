@@ -19,7 +19,9 @@ router.get('/', async (req, res) => {
             .sort(sortOption)
             
         const total = await Product.countDocuments(filter)
-        
+        const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}`
+        const prevLink = hasPrevPage ? `${baseUrl}?limit=${limit}&page=${Number(page)-1}&query=${query || ''}&sort=${sort || ''}` : null
+        const nextLink = hasNextPage ? `${baseUrl}?limit=${limit}&page=${Number(page)+1}&query=${query || ''}&sort=${sort || ''}` : null
         res.json({
             status: "success",
             payload: products,
