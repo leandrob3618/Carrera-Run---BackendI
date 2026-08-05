@@ -1,8 +1,19 @@
-
 {
   "name": "carrera-run-backend",
   "version": "1.0.0",
+  "description": "http://localhost:8080/realtimeproducts",
+  "homepage": "https://github.com/leandrob3618/Carrera-Run---BackendI#readme",
+  "bugs": {
+    "url": "https://github.com/leandrob3618/Carrera-Run---BackendI/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leandrob3618/Carrera-Run---BackendI.git"
+  },
+  "license": "ISC",
+  "author": "",
   "type": "module",
+  "main": "app.js",
   "scripts": {
     "dev": "node --watch app.js",
     "start": "node app.js"
@@ -13,5 +24,6 @@
     "express-handlebars": "^7.0.0",
     "mongoose": "^7.0.0",
     "socket.io": "^4.6.0"
-  }
+  },
+  "devDependencies": {}
 }

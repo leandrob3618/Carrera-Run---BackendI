@@ -1,3 +1,12 @@
 
-Para correr: node app.js
-Requiere: Node 24 + MongoDB corriendo
+http://localhost:8080/realtimeproducts
+
+http://localhost:8080/api/products?limit=5
+
+
+Para correr: 
+
+1- node app.js
+2- npm run dev
+
+Servidor corriendo en http://localhost:8080
