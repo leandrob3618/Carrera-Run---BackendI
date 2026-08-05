@@ -2,6 +2,8 @@
 import { Router } from 'express'
 const router = Router()
 
-router.get('/', (req,res) => res.send('Ruta Carts OK'))
+router.get('/', (req, res) => {
+    res.json({msg: "carritos ok"})
+})
 
 export default router

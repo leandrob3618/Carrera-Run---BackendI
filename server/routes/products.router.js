@@ -1,74 +1,49 @@
+
 import { Router } from 'express'
-import { Product } from '../models/product.model.js'
+import Product from '../models/product.model.js'
 const router = Router()
 
-// GET /api/products?limit=10&page=1&sort=asc&query=ropa
 router.get('/', async (req, res) => {
     try {
-        const { limit=10, page=1, sort, query } = req.query
-        const options = { limit: parseInt(limit), page: parseInt(page), lean: true }
-        if(sort) options.sort = { price: sort === 'asc'? 1 : -1 }
+        const { limit = 10, page = 1, query, sort } = req.query
+        let filter = {}
+        if(query) filter.category = query
         
-        const filter = query? { category: query } : {}
-        const result = await Product.paginate(filter, options)
-        res.send({ status: 'success', payload: result })
+        let sortOption = {}
+        if(sort === 'asc') sortOption.price = 1
+        if(sort === 'desc') sortOption.price = -1
+
+        const products = await Product.find(filter)
+            .limit(Number(limit))
+            .skip((Number(page)-1)*Number(limit))
+            .sort(sortOption)
+            
+        const total = await Product.countDocuments(filter)
+        
+        res.json({
+            status: "success",
+            payload: products,
+            totalPages: Math.ceil(total/limit),
+            prevPage: Number(page) > 1 ? Number(page) - 1 : null,
+            nextPage: Number(page) < Math.ceil(total/limit) ? Number(page) + 1 : null,
+            page: Number(page),
+            hasPrevPage: Number(page) > 1,
+            hasNextPage: Number(page) < Math.ceil(total/limit),
+            prevLink: null,
+            nextLink: null
+        })
     } catch (error) {
-        res.status(500).send({ status: 'error', error: error.message })
+        res.status(500).json({ status: "error", error: error.message })
     }
 })
 
-// GET by ID
-router.get('/:pid', async (req, res) => {
-    const product = await Product.findById(req.params.pid)
-    if(!product) return res.status(404).send({status: 'error', error: 'Producto no encontrado'})
-    res.send({ status: 'success', payload: product })
-})
-
-// POST - Crear producto
 router.post('/', async (req, res) => {
     try {
         const product = await Product.create(req.body)
-
-        // EMITIR A TIEMPO REAL
-        const products = await Product.find().lean()
-        const io = req.app.get('io')
-        io.emit('updateProducts', products)
-
-        res.status(201).send({ status: 'success', payload: product })
+        req.io.emit('newProduct', product)
+        res.status(201).json({ status: "success", payload: product })
     } catch (error) {
-        res.status(400).send({ status: 'error', error: error.message })
-    }
-})
-
-// PUT - Actualizar
-router.put('/:pid', async (req, res) => {
-    try {
-        const product = await Product.findByIdAndUpdate(req.params.pid, req.body, {new: true})
-
-        // EMITIR A TIEMPO REAL
-        const products = await Product.find().lean()
-        const io = req.app.get('io')
-        io.emit('updateProducts', products)
-
-        res.send({ status: 'success', payload: product })
-    } catch (error) {
-        res.status(500).send({ status: 'error', error: error.message })
-    }
-})
-
-// DELETE
-router.delete('/:pid', async (req, res) => {
-    try {
-        await Product.findByIdAndDelete(req.params.pid)
-
-        // EMITIR A TIEMPO REAL
-        const products = await Product.find().lean()
-        const io = req.app.get('io')
-        io.emit('updateProducts', products)
-
-        res.send({ status: 'success', message: 'Producto eliminado' })
-    } catch (error) {
-        res.status(500).send({ status: 'error', error: error.message })
+        res.status(400).json({ status: "error", error: error.message })
     }
 })
 
